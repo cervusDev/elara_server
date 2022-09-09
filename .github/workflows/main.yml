@@ -1,0 +1,33 @@
+name: Elara / CI
+
+on: 
+  push:
+    branches:
+      - master
+      - develop
+
+jobs: 
+  build:
+    name: Building server
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code 
+        uses: actions/checkout@v2
+      
+      - name: Setup Node.js environment 
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      
+      - name: Install dependencies
+        run: npm install ci
+
+      - name: Test 
+        run: npm run test
+      
+      - name: Pre build 
+        run: npm run prebuild
+      
+      - name: Build 
+        run: npm run build
