@@ -23,9 +23,6 @@ jobs:
       - name: Install dependencies
         run: npm install ci
 
-      - name: Test 
-        run: npm run test
-      
       - name: Pre build 
         run: npm run prebuild
       
