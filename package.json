@@ -84,6 +84,6 @@
     "testEnvironment": "node"
   },
   "prisma": {
-    "schema": "src/prisma/schema.prisma"
+    "schema": "src/infra/prisma/schema.prisma"
   }
 }
