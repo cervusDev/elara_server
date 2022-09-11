@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from './prisma/prisma.module';
-import { UsersModule } from './users/users.module';
+import { InfraModule } from './infra/infra.module';
+import { IoCModule } from './shared/ioc/ioc.module';
+import { DomainModule } from './module/domain.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule],
-  controllers: [],
-  providers: [],
+  imports: [InfraModule, DomainModule, IoCModule],
 })
 export class AppModule {}
