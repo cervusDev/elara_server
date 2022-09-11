@@ -1,17 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { hashSync } from 'bcrypt';
 import { User } from '../domain/entities/user.entity';
-import { IRepository } from 'src/shared/ioc/ioc.repository.';
 import { CreateUserDto } from '../domain/dto/create-user.dto';
+import { IUserRepository } from '../repositories/users.interface';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { USER } from '../domain/constant/provider';
 
 @Injectable()
-export class UsersService {
-  constructor(private readonly repository: IRepository) {}
+export class CreateUserUsecase {
+  constructor(
+    @Inject(USER.TOKEN_PROVIDER)
+    private readonly repository: IUserRepository,
+  ) {}
 
-  async create(input: CreateUserDto): Promise<User> {
-    return this.repository.user.create(input);
-  }
+  async execute({ password, username }: CreateUserDto): Promise<User> {
+    const existAdmin = await this.repository.getByUsername('admin');
 
-  async findByUsername(username: string): Promise<User> {
-    return this.repository.user.getByUsername(username);
+    if (existAdmin) {
+      throw new BadRequestException('admin user already exists.');
+    }
+
+    const user = await this.repository.create({
+      username,
+      password: hashSync(password, 10),
+      category: 'admin',
+    });
+
+    return {
+      ...user,
+      password: null,
+    };
   }
 }

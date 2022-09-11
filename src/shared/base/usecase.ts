@@ -10,8 +10,6 @@
  * @template I, R
  */
 
-import { Observable } from 'rxjs';
-
 export abstract class UseCase<I = never, R = I> {
   /**
    * Execute use case
@@ -20,5 +18,5 @@ export abstract class UseCase<I = never, R = I> {
    * @returns {Promise<R>}
    * @template I, R
    */
-  public abstract execute(input: I): Promise<R> | Observable<R> | R;
+  public abstract execute(input: I): Promise<R>;
 }

@@ -12,8 +12,8 @@ export class UserPrismaRepository implements IUserRepository {
   public async create(data: User): Promise<User> {
     return this.prisma.user.create({ data });
   }
-  public update(id: number, data: Partial<User>): Promise<User> {
-    throw new Error('Method not implemented.');
+  public async update(id: number, data: Partial<User>): Promise<User> {
+    return this.prisma.user.update({ where: { id: +id }, data });
   }
   public getById(id: number): Promise<User> {
     throw new Error('Method not implemented.');

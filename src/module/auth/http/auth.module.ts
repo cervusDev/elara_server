@@ -7,7 +7,7 @@ import { jwt } from 'src/shared/jwt/strategies/constants/jwt';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { JwtStrategy } from 'src/shared/jwt/strategies/jwt.strategy';
 import { LocalStrategy } from 'src/shared/jwt/strategies/local.strategy';
-import { UsersService } from 'src/module/users/usecases/create-user.usecase';
+import { FindUserByUsernameUsecase } from 'src/module/users/usecases/find-user-by-username';
 
 @Module({
   imports: [
@@ -20,9 +20,9 @@ import { UsersService } from 'src/module/users/usecases/create-user.usecase';
   controllers: [AuthController],
   providers: [
     AuthUsecase,
+    FindUserByUsernameUsecase,
     LocalStrategy,
     JwtStrategy,
-    UsersService,
     PrismaService,
   ],
 })

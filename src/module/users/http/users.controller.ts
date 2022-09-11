@@ -1,29 +1,36 @@
-import { hashSync } from 'bcrypt';
+import {
+  Controller,
+  Post,
+  Body,
+  Patch,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
+import { User } from '../domain/entities/user.entity';
+import { JwtGuard } from 'src/shared/jwt/guards/jwt.guard';
 import { CreateUserDto } from '../domain/dto/create-user.dto';
-import { UsersService } from '../usecases/create-user.usecase';
-import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
+import { UpdateUserDto } from '../domain/dto/update-user.dto';
+import { CreateUserUsecase } from '../usecases/create-user.usecase';
+import { UpdateUserUsecase } from '../usecases/update-user.usecase';
 
 @Controller('user')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly createUsecase: CreateUserUsecase,
+    private readonly updateUsecase: UpdateUserUsecase,
+  ) {}
 
   @Post('admin')
-  async create(@Body() { username, password }: CreateUserDto) {
-    const existAdmin = await this.usersService.findByUsername('admin');
+  public async create(@Body() { username, password }: CreateUserDto) {
+    return this.createUsecase.execute({ username, password });
+  }
 
-    if (existAdmin) {
-      throw new BadRequestException('admin user already exists.');
-    }
-
-    const user = await this.usersService.create({
-      username,
-      password: hashSync(password, 10),
-      category: 'admin',
-    });
-
-    return {
-      ...user,
-      password: null,
-    };
+  @UseGuards(JwtGuard)
+  @Patch(':id')
+  public async update(
+    @Param('id') id: number,
+    @Body() data: UpdateUserDto,
+  ): Promise<User> {
+    return this.updateUsecase.execute({ id, data });
   }
 }

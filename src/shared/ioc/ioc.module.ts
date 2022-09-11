@@ -1,14 +1,10 @@
-import { Module } from '@nestjs/common';
-import { IRepository } from './ioc.repository.';
-import { RepositoryService } from './repository.service';
+import { Global, Module } from '@nestjs/common';
+import { PrismaService } from 'src/infra/prisma/prisma.service';
+import { userRepository } from './repositories/user.repository';
 
+@Global()
 @Module({
-  providers: [
-    {
-      provide: IRepository,
-      useClass: RepositoryService,
-    },
-  ],
-  exports: [IRepository],
+  exports: [userRepository],
+  providers: [userRepository, PrismaService],
 })
 export class IoCModule {}

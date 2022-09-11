@@ -1,9 +1,9 @@
 import { compareSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Category } from '@prisma/client';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { User } from 'src/module/users/domain/entities/user.entity';
-import { UsersService } from 'src/module/users/usecases/create-user.usecase';
+import { FindUserByUsernameUsecase } from 'src/module/users/usecases/find-user-by-username';
 
 interface Payload {
   sub: number;
@@ -16,12 +16,11 @@ interface Payload {
 export class AuthUsecase {
   constructor(
     private readonly jwtService: JwtService,
-    @Inject(forwardRef(() => UsersService))
-    private readonly UserService: UsersService,
+    private readonly UserService: FindUserByUsernameUsecase,
   ) {}
-  async login(login: User) {
-    const user = await this.UserService.findByUsername(login.username);
-    const isAdmin = this.isAdmin(user.category);
+  async login({ username, category }: User) {
+    const user = await this.UserService.execute(username);
+    const isAdmin = this.isAdmin(category);
     const payload = this.performPayload(isAdmin, user);
 
     return {
@@ -36,7 +35,7 @@ export class AuthUsecase {
     username: string;
     password: string;
   }) {
-    const user = await this.UserService.findByUsername(username);
+    const user = await this.UserService.execute(username);
 
     if (!user) {
       return null;
