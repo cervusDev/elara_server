@@ -23,6 +23,9 @@ jobs:
       - name: Install dependencies
         run: npm install ci
 
+      - name: Generate types
+        run: yarn prisma:generate
+
       - name: Pre build 
         run: npm run prebuild
       
