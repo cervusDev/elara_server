@@ -1,10 +1,10 @@
 import { hashSync } from 'bcrypt';
 import { UseCase } from 'src/shared/base/usecase';
+import { USER } from '../domain/constant/provider';
 import { Inject, Injectable } from '@nestjs/common';
 import { User } from '../domain/entities/user.entity';
 import { UpdateUserDto } from '../domain/dto/update-user.dto';
 import { IUserRepository } from '../repositories/users.interface';
-import { USER } from '../domain/constant/provider';
 
 interface IReq {
   id: number;
