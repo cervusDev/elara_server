@@ -1,28 +1,22 @@
 import { hashSync } from 'bcrypt';
+import { USER } from '../domain/constant/provider';
+import { Inject, Injectable } from '@nestjs/common';
 import { User } from '../domain/entities/user.entity';
 import { CreateUserDto } from '../domain/dto/create-user.dto';
 import { IUserRepository } from '../repositories/users.interface';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { USER } from '../domain/constant/provider';
 
 @Injectable()
-export class CreateUserUsecase {
+export class CreateUserAdminUsecase {
   constructor(
     @Inject(USER.TOKEN_PROVIDER)
     private readonly repository: IUserRepository,
   ) {}
 
   async execute({ password, username }: CreateUserDto): Promise<User> {
-    const existAdmin = await this.repository.getByUsername('admin');
-
-    if (existAdmin) {
-      throw new BadRequestException('admin user already exists.');
-    }
-
-    const user = await this.repository.create({
+    const user = await this.repository.createUserAdmin({
       username,
-      password: hashSync(password, 10),
       category: 'admin',
+      password: hashSync(password, 10),
     });
 
     return {

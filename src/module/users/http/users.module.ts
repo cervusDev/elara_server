@@ -1,10 +1,15 @@
 import { Module } from '@nestjs/common';
-import { CreateUserUsecase } from '../usecases/create-user.usecase';
-import { UpdateUserUsecase } from '../usecases/update-user.usecase';
 import { UsersController } from './users.controller';
+import { UpdateUserUsecase } from '../usecases/update-user.usecase';
+import { CreateCommonUserUsecase } from '../usecases/create-common-user.usecase';
+import { CreateUserAdminUsecase } from '../usecases/create-user-admin.usecase';
 
 @Module({
   controllers: [UsersController],
-  providers: [CreateUserUsecase, UpdateUserUsecase],
+  providers: [
+    UpdateUserUsecase,
+    CreateUserAdminUsecase,
+    CreateCommonUserUsecase,
+  ],
 })
 export class UsersModule {}

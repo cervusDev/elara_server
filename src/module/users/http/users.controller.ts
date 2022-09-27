@@ -1,29 +1,26 @@
 import {
-  Controller,
   Post,
   Body,
   Patch,
   Param,
   UseGuards,
+  Controller,
 } from '@nestjs/common';
 import { User } from '../domain/entities/user.entity';
 import { JwtGuard } from 'src/shared/jwt/guards/jwt.guard';
 import { CreateUserDto } from '../domain/dto/create-user.dto';
 import { UpdateUserDto } from '../domain/dto/update-user.dto';
-import { CreateUserUsecase } from '../usecases/create-user.usecase';
 import { UpdateUserUsecase } from '../usecases/update-user.usecase';
+import { CreateUserAdminUsecase } from '../usecases/create-user-admin.usecase';
+import { CreateCommonUserUsecase } from '../usecases/create-common-user.usecase';
 
 @Controller('user')
 export class UsersController {
   constructor(
-    private readonly createUsecase: CreateUserUsecase,
     private readonly updateUsecase: UpdateUserUsecase,
+    private readonly createAdminUsecase: CreateUserAdminUsecase,
+    private readonly createCommonUserUsecase: CreateCommonUserUsecase,
   ) {}
-
-  @Post('admin')
-  public async create(@Body() { username, password }: CreateUserDto) {
-    return this.createUsecase.execute({ username, password });
-  }
 
   @UseGuards(JwtGuard)
   @Patch(':id')
@@ -32,5 +29,16 @@ export class UsersController {
     @Body() data: UpdateUserDto,
   ): Promise<User> {
     return this.updateUsecase.execute({ id, data });
+  }
+
+  @Post('admin')
+  public async createAdmin(@Body() input: CreateUserDto) {
+    return this.createAdminUsecase.execute(input);
+  }
+
+  @UseGuards(JwtGuard)
+  @Post('common')
+  public async createCommonUser(@Body() input: CreateUserDto) {
+    return this.createCommonUserUsecase.execute(input);
   }
 }

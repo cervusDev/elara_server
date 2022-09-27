@@ -4,30 +4,26 @@ import { User } from '../domain/entities/user.entity';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 
 @Injectable()
-export class UserPrismaRepository implements IUserRepository {
+export class UserPrismaRepository implements Partial<IUserRepository> {
   constructor(private readonly prisma: PrismaService) {}
+
+  public async createUserAdmin(data: User): Promise<User> {
+    return this.prisma.user.create({ data });
+  }
+
   public async getByUsername(username: string): Promise<User> {
     return this.prisma.user.findFirst({ where: { username } });
   }
+
   public async create(data: User): Promise<User> {
     return this.prisma.user.create({ data });
   }
+
   public async update(id: number, data: Partial<User>): Promise<User> {
     return this.prisma.user.update({ where: { id: +id }, data });
   }
-  public getById(id: number): Promise<User> {
-    throw new Error('Method not implemented.');
-  }
-  public getAll(): Promise<User[]> {
-    throw new Error('Method not implemented.');
-  }
-  public delete(id: number): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  public createMany?(data: User[], args?: never): Promise<User[]> {
-    throw new Error('Method not implemented.');
-  }
-  public count?(): Promise<number> {
-    throw new Error('Method not implemented.');
+
+  public async delete(id: number): Promise<void> {
+    this.prisma.user.delete({ where: { id } });
   }
 }
