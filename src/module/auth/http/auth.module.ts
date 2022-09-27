@@ -7,7 +7,7 @@ import { jwt } from 'src/shared/jwt/strategies/constants/jwt';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { JwtStrategy } from 'src/shared/jwt/strategies/jwt.strategy';
 import { LocalStrategy } from 'src/shared/jwt/strategies/local.strategy';
-import { FindUserByUsernameUsecase } from 'src/module/users/usecases/find-user-by-username';
+import { FindUserByUsernameUsecase } from 'src/module/users/usecases/find-user-by-username.usecase';
 
 @Module({
   imports: [

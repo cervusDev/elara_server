@@ -3,12 +3,12 @@ import { JwtService } from '@nestjs/jwt';
 import { Category } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/module/users/domain/entities/user.entity';
-import { FindUserByUsernameUsecase } from 'src/module/users/usecases/find-user-by-username';
+import { FindUserByUsernameUsecase } from 'src/module/users/usecases/find-user-by-username.usecase';
 
 interface Payload {
   sub: number;
-  username: string;
   admin: boolean;
+  username: string;
   category?: Category;
 }
 
@@ -61,15 +61,15 @@ export class AuthUsecase {
     if (isAdmin) {
       return {
         sub: user.id,
-        username: user.username,
         admin: isAdmin,
+        username: user.username,
       };
     }
 
     return {
       sub: user.id,
-      username: user.username,
       admin: isAdmin,
+      username: user.username,
       category: user.category,
     };
   }
