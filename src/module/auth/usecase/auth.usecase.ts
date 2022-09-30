@@ -1,7 +1,7 @@
 import { compareSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Category } from '@prisma/client';
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from 'src/module/users/domain/entities/user.entity';
 import { FindUserByUsernameUsecase } from 'src/module/users/usecases/find-user-by-username.usecase';
 
@@ -20,7 +20,7 @@ export class AuthUsecase {
   ) {}
   async login({ username, password, category }: User) {
     if (!username || !password) {
-      return new BadRequestException('username or password is empty');
+      throw new BadRequestException('username or password empty');
     }
 
     const user = await this.UserService.execute(username);
