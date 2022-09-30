@@ -1,7 +1,7 @@
 import { compareSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Category } from '@prisma/client';
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { User } from 'src/module/users/domain/entities/user.entity';
 import { FindUserByUsernameUsecase } from 'src/module/users/usecases/find-user-by-username.usecase';
 
@@ -18,7 +18,11 @@ export class AuthUsecase {
     private readonly jwtService: JwtService,
     private readonly UserService: FindUserByUsernameUsecase,
   ) {}
-  async login({ username, category }: User) {
+  async login({ username, password, category }: User) {
+    if (!username || !password) {
+      return new BadRequestException('username or password is empty');
+    }
+
     const user = await this.UserService.execute(username);
     const isAdmin = this.isAdmin(category);
     const payload = this.performPayload(isAdmin, user);
